@@ -39,6 +39,7 @@ app.get("/", (req, res) => {
   res.send(`Hello World!`);
 });
 
+// Finding a user, provided the id, (id is unique)
 app.get('/users/:id', (req, res) => {
     const id = req.params['id']; //or req.params.id
     let result = findUserById(id);
@@ -50,6 +51,12 @@ app.get('/users/:id', (req, res) => {
     }
 });
 
+function findUserById(id) {
+    return users['users_list'].find( (user) => user['id'] === id); // or line below
+    //return users['users_list'].filter( (user) => user['id'] === id);
+}
+
+// POST: Adding a user
 app.post('/users', (req, res) => {
     const userToAdd = req.body;
     addUser(userToAdd);
@@ -61,6 +68,7 @@ function addUser(user){
 }
 
 // Delete (Part 7)
+// Only keeps the users without the provided id
 app.delete('/users/:id', (req, res) => {
     const id = req.params['id']; //or req.params.id
     users['users_list'] = users['users_list'].filter( (user) => user['id'] !== id);
@@ -100,11 +108,6 @@ const findUserByName = (name) => {
 
 const findUserByJob = (job) => {
     return users['users_list'].filter( (user) => user['job'] === job);
-}
-
-function findUserById(id) {
-    return users['users_list'].find( (user) => user['id'] === id); // or line below
-    //return users['users_list'].filter( (user) => user['id'] === id);
 }
 
 app.listen(port, () => {
