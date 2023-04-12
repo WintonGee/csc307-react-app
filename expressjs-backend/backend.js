@@ -66,7 +66,19 @@ app.post('/users', (req, res) => {
 });
 
 function addUser(user){
-    users['users_list'].push(user);
+  user.id = generateRandomID(6); // Set the random user id
+  users['users_list'].push(user);
+}
+
+// Function to generate a random ID (Note: Found this online)
+function generateRandomID(length) {
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let id = '';
+  for (let i = 0; i < length; i++) {
+    const randomIndex = Math.floor(Math.random() * characters.length);
+    id += characters[randomIndex];
+  }
+  return id;
 }
 
 // Delete (Part 7)
