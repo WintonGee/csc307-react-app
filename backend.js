@@ -39,22 +39,6 @@ app.get("/", (req, res) => {
   res.send(`Hello World!`);
 });
 
-app.get('/users', (req, res) => {
-    const name = req.query.name;
-    if (name != undefined){
-        let result = findUserByName(name);
-        result = {users_list: result};
-        res.send(result);
-    }
-    else{
-        res.send(users);
-    }
-});
-
-const findUserByName = (name) => {
-    return users['users_list'].filter( (user) => user['name'] === name);
-}
-
 app.get('/users/:id', (req, res) => {
     const id = req.params['id']; //or req.params.id
     let result = findUserById(id);
@@ -66,11 +50,6 @@ app.get('/users/:id', (req, res) => {
     }
 });
 
-function findUserById(id) {
-    return users['users_list'].find( (user) => user['id'] === id); // or line below
-    //return users['users_list'].filter( (user) => user['id'] === id);
-}
-
 app.post('/users', (req, res) => {
     const userToAdd = req.body;
     addUser(userToAdd);
@@ -79,6 +58,53 @@ app.post('/users', (req, res) => {
 
 function addUser(user){
     users['users_list'].push(user);
+}
+
+// Delete (Part 7)
+app.delete('/users/:id', (req, res) => {
+    const id = req.params['id']; //or req.params.id
+    users['users_list'] = users['users_list'].filter( (user) => user['id'] !== id);
+    res.status(200).end();
+});
+
+// Find user by name and job (Part 7)
+// Had to remove the code from Part 4 for this to work
+app.get('/users', (req, res) => {
+    const name = req.query.name;
+    const job = req.query.job;
+    if (name != undefined && job != undefined){
+        let result = findUserByNameJob(name, job);
+        result = {users_list: result};
+        res.send(result);
+    } else if (name !== undefined) {
+        let result = findUserByName(name);
+        result = {users_list: result};
+        res.send(result);
+    } else if (job !== undefined) {
+        let result = findUserByJob(job);
+        result = {users_list: result};
+        res.send(result);
+    }
+    else {
+        res.send(users);
+    }
+});
+
+const findUserByNameJob = (name, job) => {
+    return users['users_list'].filter( (user) => user['name'] === name && user['job'] === job);
+}
+
+const findUserByName = (name) => {
+    return users['users_list'].filter( (user) => user['name'] === name);
+}
+
+const findUserByJob = (job) => {
+    return users['users_list'].filter( (user) => user['job'] === job);
+}
+
+function findUserById(id) {
+    return users['users_list'].find( (user) => user['id'] === id); // or line below
+    //return users['users_list'].filter( (user) => user['id'] === id);
 }
 
 app.listen(port, () => {
