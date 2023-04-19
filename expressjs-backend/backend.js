@@ -59,15 +59,17 @@ function findUserById(id) {
 }
 
 // POST: Adding a user
+// (Part 6.1 Linking Frontend to Backend)
 app.post('/users', (req, res) => {
     const userToAdd = req.body;
-    addUser(userToAdd);
-    res.status(201).end();
+    const newUser = addUser(userToAdd);
+    res.status(201).send(newUser).end();
 });
 
 function addUser(user){
   user.id = generateRandomID(6); // Set the random user id
   users['users_list'].push(user);
+  return user;
 }
 
 // Function to generate a random ID (Note: Found this online)

@@ -34,8 +34,10 @@ function MyApp() {
 
     function updateList(person) {
        makePostCall(person).then( result => {
-       if (result && result.status === 201)
-          setCharacters([...characters, person] );
+       if (result && result.status === 201) {
+        const newPerson = result.data;
+        setCharacters([...characters, newPerson] );
+       }
        });
     }
 
