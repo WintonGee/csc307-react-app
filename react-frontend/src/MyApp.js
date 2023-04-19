@@ -25,11 +25,20 @@ const characters = [
 function MyApp() {
     const [characters, setCharacters] = useState([]);
 
-    function removeOneCharacter (index) {
+    async function removeOneCharacter(index, id) {
       const updated = characters.filter((character, i) => {
           return i !== index
         });
         setCharacters(updated);
+        const delResponse = await axios.delete(`http://localhost:8000/users/${id}`)
+        // TODO double check the status is being sent
+        .then(response => {
+            delResponse.status(204).send();
+          })
+          .catch(error => {
+            delResponse.status(404).send();
+          });
+          console.log(delResponse.status);
     }
 
     function updateList(person) {
